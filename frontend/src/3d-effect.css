@@ -1,0 +1,65 @@
+/* 3D Effect Styles */
+.floating-text {
+  position: absolute;
+  font-size: 1.1rem;
+  max-width: 300px;
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(235, 156, 28, 0.1);
+  border: 1px solid rgba(235, 156, 28, 0.3);
+  backdrop-filter: blur(5px);
+  animation: float 6s ease-in-out infinite;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 5;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  will-change: transform, box-shadow;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.floating-text.active {
+  background: rgba(235, 156, 28, 0.3);
+  border: 1px solid rgba(235, 156, 28, 0.7);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  z-index: 1000 !important;
+  animation: none;
+  transform: translateZ(80px) scale(1.2) !important;
+  filter: brightness(1.3);
+}
+
+/* Stronger hover and popup effect - DISABLED to fix glitching
+.text-1:hover, .text-2:hover, .text-3:hover, 
+.text-4:hover, .text-5:hover {
+  transform: translateZ(80px) scale(1.2);
+  box-shadow: 
+    0 14px 28px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+  z-index: 1000;
+}
+
+.text-6:hover {
+  transform: translateX(-50%) translateZ(80px) scale(1.2);
+  box-shadow: 
+    0 14px 28px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+  z-index: 1000;
+}
+*/
+
+/* Add a subtle glow effect */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 8px rgba(235, 156, 28, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(235, 156, 28, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(235, 156, 28, 0.5);
+  }
+}
+
+.floating-text.active {
+  animation: glow 2s infinite;
+}

@@ -1,0 +1,332 @@
+:root {
+  --sunset-orange: #eb9c1c;
+  --black: #201c1c;
+  --white: #ffffff;
+  --gray: #f3f3f3;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--black);
+  color: var(--white);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  perspective: 1000px;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1000px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  isolation: isolate; /* Creates a new stacking context */
+}
+
+.center-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  width: 90%;
+  max-width: 800px;
+}
+
+h1, p {
+  color: var(--sunset-orange);
+}
+
+.message-box {
+  margin: 0 auto;
+  background: var(--white);
+  color: var(--black);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 1rem;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-top: 6px solid var(--sunset-orange);
+}
+
+/* Positioned paragraphs scattered around the screen */
+.floating-text {
+  position: absolute;
+  font-size: 1.1rem;
+  max-width: 300px;
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(235, 156, 28, 0.1);
+  border: 1px solid rgba(235, 156, 28, 0.3);
+  backdrop-filter: blur(5px);
+  animation: float 6s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 5;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  will-change: transform, box-shadow, z-index;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(235, 156, 28, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(235, 156, 28, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(235, 156, 28, 0);
+  }
+}
+
+/* This hover style was causing conflicts - removing to fix glitching */
+/* 
+.floating-text:hover {
+  background: rgba(235, 156, 28, 0.3);
+  border: 1px solid rgba(235, 156, 28, 0.7);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  z-index: 1000 !important;
+  animation: none;
+  transform: translateZ(50px) scale(1.15);
+  filter: brightness(1.2);
+  position: relative;
+}
+*/
+
+.text-1 {
+  top: 5%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.text-2 {
+  top: 22%;
+  right: 5%;
+  animation-delay: 1s;
+}
+
+.text-3 {
+  top: 40%;
+  left: 5%;
+  animation-delay: 2s;
+}
+
+.text-4 {
+  bottom: 25%;
+  right: 10%;
+  animation-delay: 3s;
+}
+
+.text-5 {
+  bottom: 15%;
+  left: 15%;
+  animation-delay: 4s;
+}
+
+.text-6 {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 5s;
+}
+
+.text-6:hover {
+  transform: translateX(-50%) translateZ(50px) scale(1.15);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(235, 156, 28, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(235, 156, 28, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(235, 156, 28, 0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .floating-text {
+    font-size: 0.9rem;
+    max-width: 200px;
+    padding: 0.8rem;
+  }
+  
+  .text-1 { top: 8%; left: 5%; }
+  .text-2 { top: 25%; right: 2%; }
+  .text-3 { top: 40%; left: 2%; }
+  .text-4 { bottom: 20%; right: 5%; }
+  .text-5 { bottom: 10%; left: 5%; }
+  .text-6 { top: 3%; left: 50%; }
+}
+
+/* Styles for message display */
+.toggle-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--sunset-orange);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #d48a16;
+}
+
+.all-messages {
+  margin-top: 2rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.message-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.message-item {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  border-left: 3px solid var(--sunset-orange);
+}
+
+.message-number {
+  color: var(--sunset-orange);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* Add message form styles */
+.add-message-form {
+  margin-top: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.add-message-form h3 {
+  margin-top: 0;
+  color: var(--sunset-orange);
+}
+
+.add-message-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: var(--black);
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  resize: vertical;
+}
+
+.submit-button {
+  padding: 0.5rem 1.5rem;
+  background-color: var(--sunset-orange);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #d48a16;
+  transform: translateY(-2px);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+/* Admin login styles */
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-button {
+  background-color: #555;
+}
+
+.logout-button {
+  background-color: #d43c16;
+}
+
+.logout-button:hover {
+  background-color: #b03213;
+}
+
+.admin-login {
+  margin-top: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 8px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.admin-login h3 {
+  margin-top: 0;
+  color: var(--sunset-orange);
+}
+
+.admin-login input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: var(--black);
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .button-group button {
+    width: 100%;
+    margin-left: 0 !important;
+    margin-bottom: 0.5rem;
+  }
+}
