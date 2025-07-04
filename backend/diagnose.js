@@ -3,10 +3,8 @@ const mongoose = require('mongoose');
 const dns = require('dns');
 const { execSync } = require('child_process');
 
-// MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Extract hostname from MongoDB URI
 const getHostname = (uri) => {
   try {
     const match = uri.match(/@([^/:]+)/);
@@ -21,7 +19,6 @@ const hostname = getHostname(MONGODB_URI);
 console.log('Diagnosing MongoDB connection issues...');
 console.log('MongoDB URI:', MONGODB_URI.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
 
-// Function to check DNS resolution
 const checkDns = () => {
   if (!hostname) {
     console.log('Could not extract hostname from MongoDB URI');
@@ -40,7 +37,6 @@ const checkDns = () => {
   });
 };
 
-// Function to test connectivity using ping
 const pingHost = () => {
   if (!hostname) return;
   
@@ -56,12 +52,10 @@ const pingHost = () => {
   }
 };
 
-// Function to test MongoDB connection with detailed error logging
 const testConnection = async () => {
   console.log('Testing direct MongoDB connection...');
   
   try {
-    // Add connection options for better error reporting
     await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -92,7 +86,6 @@ const testConnection = async () => {
   }
 };
 
-// Run diagnostic tests
 checkDns();
 pingHost();
-setTimeout(testConnection, 2000); // Wait for DNS check to complete
+setTimeout(testConnection, 2000);

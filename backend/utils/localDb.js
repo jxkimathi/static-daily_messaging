@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Fallback file path for local storage
 const LOCAL_DB_PATH = path.join(__dirname, 'local-messages.json');
 
-// Default messages to use if no local or remote data is available
 const DEFAULT_MESSAGES = [
   { text: "You are incredibly kind and your thoughtfulness never goes unnoticed.", order: 0 },
   { text: "Your smile brightens everyone's day, especially mine.", order: 1 },
@@ -30,7 +28,6 @@ const DEFAULT_MESSAGES = [
   { text: "Your loyalty and commitment to those you care about is beautiful.", order: 21 }
 ];
 
-// Initialize local database with default messages if it doesn't exist
 const initLocalDB = () => {
   if (!fs.existsSync(LOCAL_DB_PATH)) {
     try {
@@ -42,7 +39,6 @@ const initLocalDB = () => {
   }
 };
 
-// Get all messages from local storage
 const getLocalMessages = () => {
   try {
     initLocalDB();
@@ -54,13 +50,12 @@ const getLocalMessages = () => {
   }
 };
 
-// Save a new message to local storage
 const saveLocalMessage = (message) => {
   try {
     const messages = getLocalMessages();
     const newMessage = {
       ...message,
-      _id: Date.now().toString(), // Simple id generation
+      _id: Date.now().toString(),
       order: messages.length
     };
     messages.push(newMessage);

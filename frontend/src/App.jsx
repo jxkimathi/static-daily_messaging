@@ -21,9 +21,19 @@ function App() {
   const [allMessages, setAllMessages] = useState([]);
   const [showAllMessages, setShowAllMessages] = useState(false);
   const containerRef = useRef(null);
+  const [activeText, setActiveText] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [animatingMessages, setAnimatingMessages] = useState(false);
 
   useEffect(() => {
     fetchMessages();
+    
+    // Check if device is mobile
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
     
     // Set up the 3D effect
     const container = containerRef.current;
@@ -31,6 +41,9 @@ function App() {
     const textsArray = Array.from(floatingTexts);
     
     const handleMouseMove = (e) => {
+      // Skip if we're on mobile
+      if (window.innerWidth <= 768) return;
+      
       const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
       const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
       
@@ -44,12 +57,18 @@ function App() {
       });
     };
     
-    // Use a debounced version of mouse enter to prevent rapid state changes
-    let activeTextTimeout = null;
-    const handleMouseEnter = (e) => {
+    // Handle click on text elements
+    const handleTextClick = (e) => {
       const text = e.currentTarget;
+      const textId = text.getAttribute('data-id');
       
-      clearTimeout(activeTextTimeout);
+      // If this text is already active, deactivate it
+      if (textId === activeText) {
+        text.classList.remove('active');
+        text.style.zIndex = "5";
+        setActiveText(null);
+        return;
+      }
       
       // Reset other active elements
       textsArray.forEach(t => {
@@ -59,56 +78,28 @@ function App() {
         }
       });
       
-      // Add active class after a short delay to prevent flickering
-      setTimeout(() => {
-        text.classList.add('active');
-        text.style.zIndex = "1000";
-      }, 50);
-    };
-    
-    const handleMouseLeave = (e) => {
-      const text = e.currentTarget;
-      
-      // Clear any pending activation
-      clearTimeout(activeTextTimeout);
-      
-      // Remove active class
-      text.classList.remove('active');
-      
-      // Set a longer timeout for reset to ensure transition completes
-      activeTextTimeout = setTimeout(() => {
-        if (!text.classList.contains('active')) {
-          text.style.zIndex = "5";
-          
-          // Apply default transform based on current mouse position
-          const rect = container.getBoundingClientRect();
-          const xAxis = (window.innerWidth / 2 - (rect.left + rect.width / 2)) / 25;
-          const yAxis = (window.innerHeight / 2 - (rect.top + rect.height / 2)) / 25;
-          const depth = parseFloat(text.getAttribute('data-depth') || 0.5);
-          const rotateX = yAxis * depth;
-          const rotateY = xAxis * depth * -1;
-          text.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(20px)`;
-        }
-      }, 500);
+      // Activate this text
+      text.classList.add('active');
+      text.style.zIndex = "1000";
+      setActiveText(textId);
     };
     
     // Add event listeners
     container?.addEventListener('mousemove', handleMouseMove);
     
     textsArray.forEach(text => {
-      text.addEventListener('mouseenter', handleMouseEnter);
-      text.addEventListener('mouseleave', handleMouseLeave);
+      text.addEventListener('click', handleTextClick);
     });
     
     return () => {
+      window.removeEventListener('resize', handleResize);
       container?.removeEventListener('mousemove', handleMouseMove);
       
       textsArray.forEach(text => {
-        text?.removeEventListener('mouseenter', handleMouseEnter);
-        text?.removeEventListener('mouseleave', handleMouseLeave);
+        text?.removeEventListener('click', handleTextClick);
       });
     };
-  }, []);
+  }, [activeText]);
 
   const fetchMessages = () => {
     messageApi.getAllMessages()
@@ -129,19 +120,62 @@ function App() {
   };
 
   const toggleShowAllMessages = () => {
-    setShowAllMessages(!showAllMessages);
+    if (showAllMessages) {
+      // Start hiding animation
+      setAnimatingMessages(true);
+      setTimeout(() => {
+        setShowAllMessages(false);
+        setAnimatingMessages(false);
+      }, 300);
+    } else {
+      setShowAllMessages(true);
+      // Apply animation after rendering
+      setTimeout(() => {
+        setAnimatingMessages(true);
+        setTimeout(() => {
+          setAnimatingMessages(false);
+        }, 300);
+      }, 10);
+    }
   };
 
   return (
     <div className="container" ref={containerRef}>
-      <p className="floating-text text-1" data-depth="0.2">It's finally that time of the year!</p>
-      <p className="floating-text text-2" data-depth="0.4">You don't deserve to be celebrated on one day but everyday.</p>
-      <p className="floating-text text-3" data-depth="0.6">For the next 22 days, I've prepared a little something to usher you into 22.</p>
-      <p className="floating-text text-4" data-depth="0.8">I hope this makes your month a little brighter and lighter.</p>
-      <p className="floating-text text-5" data-depth="1.0">You are loved, appreciated and deserve to be celebrated.</p>
-      <p className="floating-text text-6" data-depth="1.2">Here's 22 things about you that make you special even though there's more than a 100 reasons why.</p>
+      {!isMobile ? (
+        // Desktop layout with floating paragraphs
+        <>
+          <p className="floating-text text-1" data-depth="0.2" data-id="text-1">It's finally that time of the year!</p>
+          <p className="floating-text text-2" data-depth="0.4" data-id="text-2">You don't deserve to be celebrated on one day but everyday.</p>
+          <p className="floating-text text-3" data-depth="0.6" data-id="text-3">For the next 22 days, I've prepared a little something to usher you into 22.</p>
+          <p className="floating-text text-4" data-depth="0.8" data-id="text-4">I hope this makes your month a little brighter and lighter.</p>
+          <p className="floating-text text-5" data-depth="1.0" data-id="text-5">You are loved, appreciated and deserve to be celebrated.</p>
+          <p className="floating-text text-6" data-depth="1.2" data-id="text-6">Here's 22 things about you that make you special even though there's more than a 100 reasons why.</p>
+        </>
+      ) : (
+        // Mobile layout with card-based paragraphs
+        <div className="mobile-quotes">
+          <div className="quote-card" data-id="text-1" onClick={(e) => e.currentTarget.classList.toggle('expanded')}>
+            <p>It's finally that time of the year!</p>
+          </div>
+          <div className="quote-card" data-id="text-2" onClick={(e) => e.currentTarget.classList.toggle('expanded')}>
+            <p>You don't deserve to be celebrated on one day but everyday.</p>
+          </div>
+          <div className="quote-card" data-id="text-3" onClick={(e) => e.currentTarget.classList.toggle('expanded')}>
+            <p>For the next 22 days, I've prepared a little something to usher you into 22.</p>
+          </div>
+          <div className="quote-card" data-id="text-4" onClick={(e) => e.currentTarget.classList.toggle('expanded')}>
+            <p>I hope this makes your month a little brighter and lighter.</p>
+          </div>
+          <div className="quote-card" data-id="text-5" onClick={(e) => e.currentTarget.classList.toggle('expanded')}>
+            <p>You are loved, appreciated and deserve to be celebrated.</p>
+          </div>
+          <div className="quote-card" data-id="text-6" onClick={(e) => e.currentTarget.classList.toggle('expanded')}>
+            <p>Here's 22 things about you that make you special even though there's more than a 100 reasons why.</p>
+          </div>
+        </div>
+      )}
       
-      <div className="center-content">
+      <div className={`center-content ${isMobile ? 'mobile-center' : ''}`}>
         <h1>Today's Message</h1>
         <div className="message-box">{message}</div>
         
@@ -152,12 +186,16 @@ function App() {
         </div>
         
         {showAllMessages && (
-          <div className="all-messages">
+          <div className={`all-messages ${animatingMessages ? 'animating' : ''}`}>
             <h2>All Messages</h2>
             <ul className="message-list">
               {allMessages.map((msg, index) => (
-                <li key={msg._id || index} className="message-item">
-                  <span className="message-number">{index + 1}.</span> {msg.text}
+                <li 
+                  key={msg._id || index} 
+                  className="message-item"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <span className="message-number">{index + 1}</span> {msg.text}
                 </li>
               ))}
             </ul>
