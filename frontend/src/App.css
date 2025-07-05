@@ -14,16 +14,18 @@ body {
   overflow: hidden;
   position: relative;
   perspective: 1000px;
+  width: 100%;
 }
 
 .container {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   perspective: 1000px;
   overflow: hidden;
   transform-style: preserve-3d;
   isolation: isolate; /* Creates a new stacking context */
+  box-sizing: border-box;
 }
 
 .center-content {
@@ -168,6 +170,8 @@ h1, p {
     overflow-x: hidden;
     height: auto;
     min-height: 100vh;
+    width: 100%;
+    position: relative;
   }
   
   .container {
@@ -176,6 +180,9 @@ h1, p {
     padding: 1rem;
     padding-bottom: 60px;
     overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .center-content {
@@ -186,6 +193,7 @@ h1, p {
     margin: 1.5rem auto;
     padding-top: 0;
     width: 100%;
+    box-sizing: border-box;
   }
   
   .message-box {
@@ -193,6 +201,7 @@ h1, p {
     padding: 1.2rem;
     box-sizing: border-box;
     margin: 1rem 0;
+    max-width: 100%;
   }
   
   .all-messages {
@@ -229,6 +238,39 @@ h1, p {
     padding: 0.8rem;
     font-size: 1rem;
   }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  
+  /* Add subtle glow effect to floating cards */
+  .quote-card {
+    box-shadow: 0 4px 8px rgba(235, 156, 28, 0.2);
+    transition: all 0.3s ease, box-shadow 1.5s ease-in-out;
+  }
+  
+  .quote-card:hover {
+    box-shadow: 0 6px 12px rgba(235, 156, 28, 0.4);
+  }
+  
+  /* Make the cards move in opposite directions for a wave effect */
+  .quote-card:nth-child(even) {
+    animation-name: floatRight;
+  }
+  
+  @keyframes floatRight {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(-6px) translateX(3px);
+    }
+  }
 }
 
 /* Mobile quote cards */
@@ -239,12 +281,15 @@ h1, p {
   flex-direction: column;
   align-items: center;
   gap: 0.8rem;
-  max-width: 95%;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .quote-card {
-  width: 90%;
+  width: 100%;
+  max-width: 90%;
   background: rgba(235, 156, 28, 0.1);
   border: 1px solid rgba(235, 156, 28, 0.3);
   border-radius: 8px;
@@ -253,7 +298,17 @@ h1, p {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  box-sizing: border-box;
+  animation: float 6s ease-in-out infinite;
 }
+
+/* Add different animation delays to create a wave effect */
+.quote-card:nth-child(1) { animation-delay: 0s; }
+.quote-card:nth-child(2) { animation-delay: 1s; }
+.quote-card:nth-child(3) { animation-delay: 2s; }
+.quote-card:nth-child(4) { animation-delay: 3s; }
+.quote-card:nth-child(5) { animation-delay: 4s; }
+.quote-card:nth-child(6) { animation-delay: 5s; }
 
 .quote-card p {
   margin: 0;
@@ -274,16 +329,42 @@ h1, p {
   transition: all 0.3s ease;
 }
 
+/* Add subtle pulse glow for mobile */
+@media (max-width: 768px) {
+  .quote-card {
+    animation: float 6s ease-in-out infinite, subtlePulse 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes subtlePulse {
+    0% {
+      box-shadow: 0 4px 8px rgba(235, 156, 28, 0.2);
+    }
+    100% {
+      box-shadow: 0 4px 12px rgba(235, 156, 28, 0.4);
+    }
+  }
+}
+
 .quote-card.expanded {
   background: rgba(235, 156, 28, 0.3);
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(235, 156, 28, 0.7);
+  animation: floatExpanded 4s ease-in-out infinite;
 }
 
 .quote-card.expanded::after {
   border-width: 0 0 18px 18px;
   border-color: transparent transparent rgba(235, 156, 28, 0.8) transparent;
+}
+
+@keyframes floatExpanded {
+  0%, 100% {
+    transform: translateY(0) scale(1.05);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.05);
+  }
 }
 
 .mobile-center {

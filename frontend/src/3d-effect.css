@@ -50,6 +50,10 @@
   .floating-text {
     transition: all 0.3s ease;
     transform: none !important;
+    max-width: 80%;
+    left: 10% !important;
+    right: 10% !important;
+    box-sizing: border-box;
   }
   
   .floating-text.active {
@@ -75,5 +79,17 @@
   .floating-text.active::after {
     background-color: rgba(255, 255, 255, 1);
     opacity: 1;
+  }
+  
+  /* Reset positions for mobile */
+  .text-1, .text-2, .text-3, .text-4, .text-5, .text-6 {
+    position: relative;
+    margin: 1rem auto;
+    max-width: 90%;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
   }
 }
