@@ -10,8 +10,10 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background-color: var(--black);
   color: var(--white);
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   perspective: 1000px;
   width: 100%;
@@ -20,11 +22,13 @@ body {
 .container {
   position: relative;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   perspective: 1000px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   transform-style: preserve-3d;
-  isolation: isolate; /* Creates a new stacking context */
+  isolation: isolate;
   box-sizing: border-box;
 }
 
@@ -56,7 +60,6 @@ h1, p {
   border-top: 6px solid var(--sunset-orange);
 }
 
-/* Positioned paragraphs scattered around the screen */
 .floating-text {
   position: absolute;
   font-size: 1.1rem;
@@ -86,20 +89,6 @@ h1, p {
     box-shadow: 0 0 0 0 rgba(235, 156, 28, 0);
   }
 }
-
-/* This hover style was causing conflicts - removing to fix glitching */
-/* 
-.floating-text:hover {
-  background: rgba(235, 156, 28, 0.3);
-  border: 1px solid rgba(235, 156, 28, 0.7);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-  z-index: 1000 !important;
-  animation: none;
-  transform: translateZ(50px) scale(1.15);
-  filter: brightness(1.2);
-  position: relative;
-}
-*/
 
 .text-1 {
   top: 5%;
@@ -163,7 +152,6 @@ h1, p {
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   body {
     overflow-y: auto;
@@ -209,12 +197,15 @@ h1, p {
     margin: 1rem 0;
     box-sizing: border-box;
     padding: 1rem;
-    max-height: 60vh;
+    max-height: 50vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .message-list {
     padding-left: 0;
     margin: 0.5rem 0;
+    overflow-y: visible;
   }
   
   .message-item {
@@ -248,7 +239,6 @@ h1, p {
     }
   }
   
-  /* Add subtle glow effect to floating cards */
   .quote-card {
     box-shadow: 0 4px 8px rgba(235, 156, 28, 0.2);
     transition: all 0.3s ease, box-shadow 1.5s ease-in-out;
@@ -258,7 +248,6 @@ h1, p {
     box-shadow: 0 6px 12px rgba(235, 156, 28, 0.4);
   }
   
-  /* Make the cards move in opposite directions for a wave effect */
   .quote-card:nth-child(even) {
     animation-name: floatRight;
   }
@@ -273,7 +262,6 @@ h1, p {
   }
 }
 
-/* Mobile quote cards */
 .mobile-quotes {
   padding-top: 1rem;
   margin-bottom: 1rem;
@@ -302,7 +290,6 @@ h1, p {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Add different animation delays to create a wave effect */
 .quote-card:nth-child(1) { animation-delay: 0s; }
 .quote-card:nth-child(2) { animation-delay: 1s; }
 .quote-card:nth-child(3) { animation-delay: 2s; }
@@ -329,7 +316,6 @@ h1, p {
   transition: all 0.3s ease;
 }
 
-/* Add subtle pulse glow for mobile */
 @media (max-width: 768px) {
   .quote-card {
     animation: float 6s ease-in-out infinite, subtlePulse 3s ease-in-out infinite alternate;
@@ -372,7 +358,6 @@ h1, p {
   position: relative !important;
 }
 
-/* All Messages styling */
 .all-messages {
   margin-top: 2rem;
   background-color: rgba(235, 156, 28, 0.08);
@@ -381,12 +366,34 @@ h1, p {
   padding: 1.5rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  max-height: 80vh;
+  max-height: 70vh;
   overflow-y: auto;
+  overflow-x: hidden;
   transition: all 0.3s ease-out;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.3s forwards;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(235, 156, 28, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+.all-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.all-messages::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.all-messages::-webkit-scrollbar-thumb {
+  background: rgba(235, 156, 28, 0.5);
+  border-radius: 4px;
+}
+
+.all-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(235, 156, 28, 0.7);
 }
 
 .all-messages.animating {
@@ -417,6 +424,8 @@ h1, p {
 .message-list {
   list-style-type: none;
   padding-left: 0;
+  margin: 0;
+  padding-right: 5px;
 }
 
 .message-item {
@@ -428,6 +437,8 @@ h1, p {
   opacity: 0;
   transform: translateX(-10px);
   animation: slideIn 0.3s forwards;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 @keyframes slideIn {

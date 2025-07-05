@@ -28,7 +28,6 @@
   filter: brightness(1.3);
 }
 
-/* Add a subtle glow effect */
 @keyframes glow {
   0% {
     box-shadow: 0 0 8px rgba(235, 156, 28, 0.5);
@@ -45,7 +44,6 @@
   animation: glow 2s infinite;
 }
 
-/* Touch device handling */
 @media (hover: none) {
   .floating-text {
     transition: all 0.3s ease;
@@ -63,7 +61,6 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   }
   
-  /* Add tap hint */
   .floating-text::after {
     content: '';
     position: absolute;
@@ -81,7 +78,6 @@
     opacity: 1;
   }
   
-  /* Reset positions for mobile */
   .text-1, .text-2, .text-3, .text-4, .text-5, .text-6 {
     position: relative;
     margin: 1rem auto;
