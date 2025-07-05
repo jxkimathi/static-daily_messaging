@@ -13,7 +13,8 @@ function getMessageIndex(startDate, totalMessages) {
   }
 
   const daysSince = Math.floor((eightPM - new Date(startDate)) / (1000 * 60 * 60 * 24));
-  return daysSince % totalMessages;
+  // Adding offset of 1 to show day 3 on July 5, 2025
+  return (daysSince + 1) % totalMessages;
 }
 
 function App() {
