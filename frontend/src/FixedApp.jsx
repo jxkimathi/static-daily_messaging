@@ -28,6 +28,29 @@ function App() {
   const [animatingMessages, setAnimatingMessages] = useState(false);
   const [error, setError] = useState(null);
 
+  // Create a reusable function for handling paragraph text clicks
+  const handleTextClick = (e) => {
+    const text = e.currentTarget;
+    const textId = text.getAttribute('data-id');
+    
+    if (textId === activeText) {
+      text.classList.remove('active');
+      text.style.zIndex = "5";
+      setActiveText(null);
+    } else {
+      document.querySelectorAll('.floating-text.active').forEach(t => {
+        if (t !== text) {
+          t.classList.remove('active');
+          t.style.zIndex = "5";
+        }
+      });
+      
+      text.classList.add('active');
+      text.style.zIndex = "1000";
+      setActiveText(textId);
+    }
+  };
+
   useEffect(() => {
     console.log("App useEffect running");
     
@@ -76,42 +99,11 @@ function App() {
         });
       };
       
-      const handleTextClick = (e) => {
-        const text = e.currentTarget;
-        const textId = text.getAttribute('data-id');
-        
-        if (textId === activeText) {
-          text.classList.remove('active');
-          text.style.zIndex = "5";
-          setActiveText(null);
-          return;
-        }
-        
-        textsArray.forEach(t => {
-          if (t !== text && t.classList.contains('active')) {
-            t.classList.remove('active');
-            t.style.zIndex = "5";
-          }
-        });
-        
-        text.classList.add('active');
-        text.style.zIndex = "1000";
-        setActiveText(textId);
-      };
-      
       container.addEventListener('mousemove', handleMouseMove);
-      
-      textsArray.forEach(text => {
-        text.addEventListener('click', handleTextClick);
-      });
       
       return () => {
         window.removeEventListener('resize', handleResize);
         container.removeEventListener('mousemove', handleMouseMove);
-        
-        textsArray.forEach(text => {
-          text.removeEventListener('click', handleTextClick);
-        });
       };
     } catch (err) {
       console.error("Error in 3D effect setup:", err);
@@ -187,153 +179,24 @@ function App() {
     <div className="container" ref={containerRef} style={{ position: 'relative', zIndex: 10 }}>
       {!isMobile ? (
         <>
-          <p className="floating-text text-1" data-depth="0.2" data-id="text-1" 
-             onClick={(e) => {
-               console.log("Direct click on text-1");
-               const text = e.currentTarget;
-               const textId = text.getAttribute('data-id');
-               
-               if (textId === activeText) {
-                 text.classList.remove('active');
-                 text.style.zIndex = "5";
-                 setActiveText(null);
-               } else {
-                 document.querySelectorAll('.floating-text.active').forEach(t => {
-                   if (t !== text) {
-                     t.classList.remove('active');
-                     t.style.zIndex = "5";
-                   }
-                 });
-                 
-                 text.classList.add('active');
-                 text.style.zIndex = "1000";
-                 setActiveText(textId);
-               }
-             }}
-          >It's finally that time of the year!</p>
-          <p className="floating-text text-2" data-depth="0.4" data-id="text-2"
-             onClick={(e) => {
-               console.log("Direct click on text-2");
-               const text = e.currentTarget;
-               const textId = text.getAttribute('data-id');
-               
-               if (textId === activeText) {
-                 text.classList.remove('active');
-                 text.style.zIndex = "5";
-                 setActiveText(null);
-               } else {
-                 document.querySelectorAll('.floating-text.active').forEach(t => {
-                   if (t !== text) {
-                     t.classList.remove('active');
-                     t.style.zIndex = "5";
-                   }
-                 });
-                 
-                 text.classList.add('active');
-                 text.style.zIndex = "1000";
-                 setActiveText(textId);
-               }
-             }}
-          >You don't deserve to be celebrated on one day but everyday.</p>
-          <p className="floating-text text-3" data-depth="0.6" data-id="text-3"
-             onClick={(e) => {
-               console.log("Direct click on text-3");
-               const text = e.currentTarget;
-               const textId = text.getAttribute('data-id');
-               
-               if (textId === activeText) {
-                 text.classList.remove('active');
-                 text.style.zIndex = "5";
-                 setActiveText(null);
-               } else {
-                 document.querySelectorAll('.floating-text.active').forEach(t => {
-                   if (t !== text) {
-                     t.classList.remove('active');
-                     t.style.zIndex = "5";
-                   }
-                 });
-                 
-                 text.classList.add('active');
-                 text.style.zIndex = "1000";
-                 setActiveText(textId);
-               }
-             }}
-          >For the next 22 days, I've prepared a little something to usher you into 22.</p>
-          <p className="floating-text text-4" data-depth="0.8" data-id="text-4"
-             onClick={(e) => {
-               console.log("Direct click on text-4");
-               const text = e.currentTarget;
-               const textId = text.getAttribute('data-id');
-               
-               if (textId === activeText) {
-                 text.classList.remove('active');
-                 text.style.zIndex = "5";
-                 setActiveText(null);
-               } else {
-                 // Deactivate any other active text
-                 document.querySelectorAll('.floating-text.active').forEach(t => {
-                   if (t !== text) {
-                     t.classList.remove('active');
-                     t.style.zIndex = "5";
-                   }
-                 });
-                 
-                 text.classList.add('active');
-                 text.style.zIndex = "1000";
-                 setActiveText(textId);
-               }
-             }}
-          >I hope this makes your month a little brighter and lighter.</p>
-          <p className="floating-text text-5" data-depth="1.0" data-id="text-5"
-             onClick={(e) => {
-               console.log("Direct click on text-5");
-               const text = e.currentTarget;
-               const textId = text.getAttribute('data-id');
-               
-               if (textId === activeText) {
-                 text.classList.remove('active');
-                 text.style.zIndex = "5";
-                 setActiveText(null);
-               } else {
-                 // Deactivate any other active text
-                 document.querySelectorAll('.floating-text.active').forEach(t => {
-                   if (t !== text) {
-                     t.classList.remove('active');
-                     t.style.zIndex = "5";
-                   }
-                 });
-                 
-                 text.classList.add('active');
-                 text.style.zIndex = "1000";
-                 setActiveText(textId);
-               }
-             }}
-          >You are loved, appreciated and deserve to be celebrated.</p>
-          <p className="floating-text text-6" data-depth="1.2" data-id="text-6"
-             onClick={(e) => {
-               console.log("Direct click on text-6");
-               const text = e.currentTarget;
-               const textId = text.getAttribute('data-id');
-               
-               if (textId === activeText) {
-                 text.classList.remove('active');
-                 text.style.zIndex = "5";
-                 setActiveText(null);
-               } else {
-                 // Deactivate any other active text
-                 document.querySelectorAll('.floating-text.active').forEach(t => {
-                   if (t !== text) {
-                     t.classList.remove('active');
-                     t.style.zIndex = "5";
-                   }
-                 });
-                 
-                 text.classList.add('active');
-                 text.style.zIndex = "1000";
-                 setActiveText(textId);
-               }
-             }}
-          >Here's 22 things about you that make you special even though there's more than a 100 reasons why.</p>
+          <p className="floating-text text-1" data-depth="0.2" data-id="text-1" onClick={handleTextClick}>
+            It's finally that time of the year!
+          </p>
+          <p className="floating-text text-2" data-depth="0.4" data-id="text-2" onClick={handleTextClick}>
+            You don't deserve to be celebrated on one day but everyday.
+          </p>
+          <p className="floating-text text-3" data-depth="0.6" data-id="text-3" onClick={handleTextClick}>
+            For the next 22 days, I've prepared a little something to usher you into 22.
+          </p>
+          <p className="floating-text text-4" data-depth="0.8" data-id="text-4" onClick={handleTextClick}>
+            I hope this makes your month a little brighter and lighter.
+          </p>
+          <p className="floating-text text-5" data-depth="1.0" data-id="text-5" onClick={handleTextClick}>
+            You are loved, appreciated and deserve to be celebrated.
+          </p>
+          <p className="floating-text text-6" data-depth="1.2" data-id="text-6" onClick={handleTextClick}>
+            Here's 22 things about you that make you special even though there's more than a 100 reasons why.
+          </p>
         </>
       ) : (
         <div className="mobile-quotes">
