@@ -23,23 +23,7 @@ function AppWrapper() {
       rootElement.style.position = 'relative';
     }
     
-    const debugElement = document.createElement('div');
-    debugElement.style.position = 'fixed';
-    debugElement.style.top = '5px';
-    debugElement.style.left = '5px';
-    debugElement.style.padding = '5px';
-    debugElement.style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
-    debugElement.style.color = 'white';
-    debugElement.style.fontSize = '10px';
-    debugElement.style.zIndex = '9999';
-    debugElement.style.borderRadius = '3px';
-    debugElement.textContent = 'DEBUG: App Mounted';
-    document.body.appendChild(debugElement);
-    
     return () => {
-      if (document.body.contains(debugElement)) {
-        document.body.removeChild(debugElement);
-      }
     };
   }, []);
   

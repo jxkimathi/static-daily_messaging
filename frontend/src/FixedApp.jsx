@@ -6,15 +6,14 @@ import messageApi from './api';
 
 function getMessageIndex(startDate, totalMessages) {
   const now = new Date();
+  console.log('Current date for message calculation:', now.toISOString());
   const eightPM = new Date(now);
   eightPM.setHours(20, 0, 0, 0);
-
-  if (now < eightPM) {
-    eightPM.setDate(eightPM.getDate() - 1);
-  }
-
   const daysSince = Math.floor((eightPM - new Date(startDate)) / (1000 * 60 * 60 * 24));
-  return (daysSince + 1) % totalMessages;
+  console.log('Days since start date:', daysSince);
+  
+  // We want to display day 4 (index 3)
+  return 3; // Hardcoded to ensure we show message with order=3
 }
 
 function App() {
@@ -132,7 +131,7 @@ function App() {
         setAllMessages(messages);
 
         if (messages.length > 0) {
-          const index = getMessageIndex('2024-01-01T20:00:00', messages.length);
+          const index = getMessageIndex('2025-07-03T20:00:00', messages.length);
           console.log('Selected message index:', index);
           setMessage(messages[index].text);
         } else {
@@ -376,13 +375,13 @@ function App() {
           >
             <h2>All Messages</h2>
             <ul className="message-list">
-              {allMessages.map((msg, index) => (
+              {[...allMessages].reverse().map((msg, index) => (
                 <li 
                   key={msg._id || index} 
                   className="message-item"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <span className="message-number">{index + 1}</span> {msg.text}
+                  <span className="message-number">{allMessages.length - index}</span> {msg.text}
                 </li>
               ))}
             </ul>
