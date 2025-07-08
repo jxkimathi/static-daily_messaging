@@ -6,18 +6,13 @@ import messageApi from './api';
 
 function getMessageIndex(startDate, totalMessages) {
   const now = new Date();
-  console.log('Current date for message calculation:', now.toISOString());
   const eightPM = new Date(now);
   eightPM.setHours(20, 0, 0, 0);
-  const daysSince = Math.floor((eightPM - new Date(startDate)) / (1000 * 60 * 60 * 24));
-  console.log('Days since start date:', daysSince);
   
-  // We want to display day 4 (index 3)
-  return 3; // Hardcoded to ensure we show message with order=3
+  return 4;
 }
 
 function App() {
-  console.log("App component rendering");
   
   const [message, setMessage] = useState("Loading...");
   const [allMessages, setAllMessages] = useState([]);
@@ -28,7 +23,6 @@ function App() {
   const [animatingMessages, setAnimatingMessages] = useState(false);
   const [error, setError] = useState(null);
 
-  // Create a reusable function for handling paragraph text clicks
   const handleTextClick = (e) => {
     const text = e.currentTarget;
     const textId = text.getAttribute('data-id');
@@ -52,7 +46,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("App useEffect running");
     
     document.body.style.backgroundColor = '#201c1c';
     document.body.style.color = 'white';
@@ -71,15 +64,12 @@ function App() {
     
     try {
       const container = containerRef.current;
-      console.log("Container ref:", container);
       
       if (!container) {
-        console.error("Container ref is null");
         return;
       }
       
       const floatingTexts = document.querySelectorAll('.floating-text');
-      console.log("Found floating texts:", floatingTexts.length);
       
       const textsArray = Array.from(floatingTexts);
       
@@ -106,32 +96,26 @@ function App() {
         container.removeEventListener('mousemove', handleMouseMove);
       };
     } catch (err) {
-      console.error("Error in 3D effect setup:", err);
       setError("Error setting up 3D effects: " + err.message);
     }
   }, [activeText, isMobile]);
 
   useEffect(() => {
-    console.log("Active text changed to:", activeText);
   }, [activeText]);
 
   const fetchMessages = () => {
-    console.log('Fetching messages...');
     messageApi.getAllMessages()
       .then(messages => {
-        console.log('Messages received:', messages);
         setAllMessages(messages);
 
         if (messages.length > 0) {
           const index = getMessageIndex('2025-07-03T20:00:00', messages.length);
-          console.log('Selected message index:', index);
           setMessage(messages[index].text);
         } else {
           setMessage("No messages yet.");
         }
       })
       .catch(err => {
-        console.error('Error fetching messages:', err);
         setError("Failed to fetch messages: " + err.message);
         setMessage("Failed to load message. Check console for errors.");
       });
@@ -172,8 +156,6 @@ function App() {
       }
     }
   }, [showAllMessages]);
-
-  console.log("Rendering App component with message:", message?.substring(0, 30));
 
   return (
     <div className="container" ref={containerRef} style={{ position: 'relative', zIndex: 10 }}>

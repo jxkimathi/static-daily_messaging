@@ -32,7 +32,6 @@ if (rootElement) {
         </ErrorBoundary>
       </StrictMode>,
     );
-    console.log('React app successfully mounted');
   } catch (error) {
     console.error('Failed to mount React app:', error);
     rootElement.innerHTML = `
