@@ -9,7 +9,7 @@ function getMessageIndex(startDate, totalMessages) {
   const eightPM = new Date(now);
   eightPM.setHours(20, 0, 0, 0);
   
-  return 12;
+  return 13;
 }
 
 function App() {
