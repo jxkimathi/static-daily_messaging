@@ -16,12 +16,17 @@ router.get('/', async (req, res) => {
 // POST a new message
 router.post('/', async (req, res) => {
   try {
-    const { text } = req.body;
+    const { text, link } = req.body;
     if (!text || typeof text !== 'string') {
       return res.status(400).json({ error: 'Text is required and must be a string' });
     }
     
-    const newMessage = await messageService.create({ text });
+    // Validate link if provided
+    if (link && typeof link !== 'string') {
+      return res.status(400).json({ error: 'Link must be a string' });
+    }
+    
+    const newMessage = await messageService.create({ text, link });
     res.status(201).json(newMessage);
   } catch (err) {
     console.error('Error in POST /api/messages:', err);

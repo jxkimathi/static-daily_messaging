@@ -16,9 +16,9 @@ const messageApi = {
     }
   },
 
-  async createMessage(text) {
+  async createMessage(text, link = null) {
     try {
-      const response = await axios.post(API_URL, { text });
+      const response = await axios.post(API_URL, { text, link });
       return response.data;
     } catch (error) {
       console.error('Error creating message:', error);

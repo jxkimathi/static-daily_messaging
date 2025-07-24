@@ -9,7 +9,7 @@ function getMessageIndex(startDate, totalMessages) {
   const eightPM = new Date(now);
   eightPM.setHours(20, 0, 0, 0);
   
-  return 20;
+  return 21;
 }
 
 function App() {
@@ -227,6 +227,13 @@ function App() {
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <span className="message-number">{allMessages.length - index}</span> {msg.text}
+                  {msg.link && (
+                    <div className="message-link">
+                      <a href={msg.link} target="_blank" rel="noopener noreferrer" style={{color: '#4a9eff', textDecoration: 'underline'}}>
+                        View Link
+                      </a>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
@@ -249,6 +256,51 @@ function App() {
             <p>{error}</p>
           </div>
         )}
+        
+        {/* Birthday Website Link */}
+        <div style={{
+          marginTop: '40px',
+          padding: '20px',
+          backgroundColor: 'rgba(255,255,255,0.1)',
+          borderRadius: '10px',
+          border: '1px solid rgba(255,255,255,0.2)',
+          textAlign: 'center'
+        }}>
+          <p style={{ 
+            fontSize: '1.1rem', 
+            marginBottom: '15px',
+            color: 'white'
+          }}>
+            🎉 Special Birthday Surprise 🎉
+          </p>
+          <a 
+            href="https://birthday-website-fawn-three.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#4a9eff',
+              textDecoration: 'none',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              padding: '10px 20px',
+              border: '2px solid #4a9eff',
+              borderRadius: '25px',
+              display: 'inline-block',
+              transition: 'all 0.3s ease',
+              backgroundColor: 'rgba(74, 158, 255, 0.1)'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = '#4a9eff';
+              e.target.style.color = 'white';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = 'rgba(74, 158, 255, 0.1)';
+              e.target.style.color = '#4a9eff';
+            }}
+          >
+            🎂 Visit Your Birthday Website 🎂
+          </a>
+        </div>
       </div>
     </div>
   );
